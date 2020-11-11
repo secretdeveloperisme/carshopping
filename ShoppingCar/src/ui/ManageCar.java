@@ -16,6 +16,8 @@ public class ManageCar extends javax.swing.JFrame {
      */
     public ManageCar() {
         initComponents();
+        this.pack();
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -54,6 +56,8 @@ public class ManageCar extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        pnlModify.setBackground(new java.awt.Color(128, 170, 255));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.MatteBorder(null), "modify"));
 
