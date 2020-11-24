@@ -10,13 +10,18 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Vector;
+import javax.swing.JOptionPane;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import model.Account;
 import model.Car;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import static process.HandleLogin.NAME_ROOT;
 import static process.HandleLogin.PASSWORD_ROOT;
+import process.HandleManageCar;
 
 /**
  *
@@ -29,6 +34,7 @@ public class ManageCar extends javax.swing.JFrame {
      */
     public ManageCar() {
         initComponents();
+        addEvents();
         
         this.pack();
         this.setLocationRelativeTo(null);
@@ -51,18 +57,18 @@ public class ManageCar extends javax.swing.JFrame {
         edtName = new javax.swing.JTextField();
         edtPrice = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        edtAmount = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         edtBrand = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        btnAdd = new javax.swing.JButton();
+        btnAddCar = new javax.swing.JButton();
         btnFind = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
         btnEdit = new javax.swing.JButton();
         btnReset = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        cbbCountry = new javax.swing.JComboBox<>();
+        jLabel10 = new javax.swing.JLabel();
+        spnAmount = new javax.swing.JSpinner();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblCar = new javax.swing.JTable();
         jLabel6 = new javax.swing.JLabel();
@@ -96,22 +102,14 @@ public class ManageCar extends javax.swing.JFrame {
 
         jLabel2.setText("price");
 
-        jLabel3.setText("amount");
-
-        edtAmount.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                edtAmountActionPerformed(evt);
-            }
-        });
-
         jLabel4.setText("name_brand");
 
         jLabel5.setText("country");
 
-        btnAdd.setText("ADD");
-        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+        btnAddCar.setText("ADD");
+        btnAddCar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddActionPerformed(evt);
+                btnAddCarActionPerformed(evt);
             }
         });
 
@@ -141,7 +139,7 @@ public class ManageCar extends javax.swing.JFrame {
                 .addGap(14, 14, 14)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnFind, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
-                    .addComponent(btnAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnAddCar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -157,7 +155,7 @@ public class ManageCar extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAdd)
+                    .addComponent(btnAddCar)
                     .addComponent(btnDelete))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -168,7 +166,11 @@ public class ManageCar extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "choose country", "viet nam", "united state", "united kingdom", "japan", "germany", "thailand", " " }));
+        cbbCountry.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "choose country", "viet nam", "america", "germany", "japan", "Italia", "united kingdom", "thailand", "korea", " " }));
+
+        jLabel10.setText("amount");
+
+        spnAmount.setModel(new javax.swing.SpinnerNumberModel());
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -180,7 +182,6 @@ public class ManageCar extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3)
                             .addComponent(jLabel4)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -188,19 +189,21 @@ public class ManageCar extends javax.swing.JFrame {
                                 .addComponent(edtName, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(89, 89, 89))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(edtPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(edtBrand, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
-                                    .addComponent(edtAmount, javax.swing.GroupLayout.Alignment.TRAILING))))
+                                    .addComponent(cbbCountry, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(spnAmount))))
                         .addGap(90, 90, 90)))
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(117, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -217,18 +220,18 @@ public class ManageCar extends javax.swing.JFrame {
                             .addComponent(edtPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(edtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spnAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(edtBrand, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(23, 23, 23)
+                .addGap(37, 37, 37)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33))
+                    .addComponent(cbbCountry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addGap(19, 19, 19))
         );
 
         tblCar.setModel(new javax.swing.table.DefaultTableModel(
@@ -456,32 +459,39 @@ public class ManageCar extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void edtNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtNameActionPerformed
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_edtNameActionPerformed
+        edtName.setText("");
+        edtPrice.setText("");
+        spnAmount.setValue(0);
+        edtBrand.setText("");
+        cbbCountry.setSelectedIndex(0);
 
-    private void edtAmountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtAmountActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_edtAmountActionPerformed
-
-    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        // TODO add your handling code here:
-       
-    }//GEN-LAST:event_btnAddActionPerformed
+    }//GEN-LAST:event_btnResetActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnDeleteActionPerformed
 
-    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+    private void btnAddCarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddCarActionPerformed
+        String nameCar = edtName.getText();
+        String price = edtPrice.getText();
+        int amount = (int)spnAmount.getValue();
+        String nameBrand = edtBrand.getText();
+        String country = cbbCountry.getItemAt(cbbCountry.getSelectedIndex());
+        Car car = new Car(0, nameCar, Integer.parseInt(price), amount, nameBrand, country);
+        if(HandleManageCar.addCar(car)){
+            JOptionPane.showMessageDialog(this, "add car successfully");
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "add car unsuccessfully");
+        }
+        updateTableCar();
+    }//GEN-LAST:event_btnAddCarActionPerformed
+
+    private void edtNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtNameActionPerformed
         // TODO add your handling code here:
-        edtName.setText("");
-        edtPrice.setText("");
-        edtAmount.setText("");
-        edtBrand.setText("");
-        
-        
-    }//GEN-LAST:event_btnResetActionPerformed
+    }//GEN-LAST:event_edtNameActionPerformed
     void updateTableCar(){
         Connection connection = null;
         Statement statement = null;
@@ -567,21 +577,20 @@ public class ManageCar extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnAddCar;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnFind;
     private javax.swing.JButton btnReset;
-    private javax.swing.JTextField edtAmount;
+    private javax.swing.JComboBox<String> cbbCountry;
     private javax.swing.JTextField edtBrand;
     private javax.swing.JTextField edtName;
     private javax.swing.JTextField edtPrice;
     private javax.swing.JButton jButton1;
     private com.toedter.calendar.JCalendar jCalendar1;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -600,7 +609,29 @@ public class ManageCar extends javax.swing.JFrame {
     private javax.swing.JPanel pnlModify;
     private javax.swing.JTabbedPane pnlOrde;
     private javax.swing.JPanel pnlOrder;
+    private javax.swing.JSpinner spnAmount;
     private javax.swing.JTable tblCar;
     private javax.swing.JTable tblCarBuying;
     // End of variables declaration//GEN-END:variables
+
+    private void addEvents() {
+        ListSelectionModel select = tblCar.getSelectionModel();
+        select.setValueIsAdjusting(true);
+        select.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if(e.getValueIsAdjusting())
+                    return;
+                Car car = new Car();
+                int row = tblCar.getSelectedRow();
+                car.setNameCar((String) tblCar.getValueAt(row, 1));
+                car.setPrice((int) tblCar.getValueAt(row, 2));
+                car.setAmount((int) tblCar.getValueAt(row, 3));
+                car.setName_brand((String) tblCar.getValueAt(row, 4));
+                car.setCountry((String) tblCar.getValueAt(row, 5));
+                new DetailCar(car).setVisible(true);
+                System.out.println("select");
+            }
+        });
+    }
 }

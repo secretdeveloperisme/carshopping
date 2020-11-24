@@ -5,9 +5,9 @@
  */
 package ui;
 
+import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 import process.HandleLogin;
-import process.*;
 
 /**
  *
@@ -66,8 +66,10 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
+        btnLogin.setMnemonic(KeyEvent.VK_C
+        );
         btnLogin.setText("Login");
-        btnLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.W_RESIZE_CURSOR));
+        btnLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLoginActionPerformed(evt);
