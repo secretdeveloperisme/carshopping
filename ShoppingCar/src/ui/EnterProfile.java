@@ -5,22 +5,30 @@
  */
 package ui;
 
+
+import javax.swing.JOptionPane;
+import model.Person;
+import process.HandleAccount;
+import process.HandleDate;
+import process.HandleNumber;
+
 /**
  *
  * @author linh2
  */
 public class EnterProfile extends javax.swing.JFrame {
+    private String userName;
 
     /**
      * Creates new form CreateAccount
      */
-    public EnterProfile() {
+    public EnterProfile(String userName) {
+        this.userName = userName;
         initComponents();
         this.pack();
         this.setTitle("Create Account");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
-       
     }
 
     /**
@@ -44,13 +52,14 @@ public class EnterProfile extends javax.swing.JFrame {
         spnAge = new javax.swing.JSpinner();
         jLabel11 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        dcDOB = new com.toedter.calendar.JDateChooser();
         edtFirstName = new javax.swing.JTextField();
         rbnMale = new javax.swing.JRadioButton();
         rbnFemale = new javax.swing.JRadioButton();
         jLabel4 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         edtPhone = new javax.swing.JTextField();
+        btnEnterPI = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -76,8 +85,10 @@ public class EnterProfile extends javax.swing.JFrame {
             }
         });
 
+        btgGender.add(rbnMale);
         rbnMale.setText("Male");
 
+        btgGender.add(rbnFemale);
         rbnFemale.setText("Female");
 
         jLabel4.setText("Phone");
@@ -90,14 +101,29 @@ public class EnterProfile extends javax.swing.JFrame {
             }
         });
 
+        btnEnterPI.setText("Enter");
+        btnEnterPI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEnterPIActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(171, 171, 171)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(142, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(171, 171, 171)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(83, 83, 83)
+                        .addComponent(jLabel10))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(239, 239, 239)
+                        .addComponent(btnEnterPI, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(147, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addGap(81, 81, 81)
@@ -105,37 +131,34 @@ public class EnterProfile extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addComponent(jLabel11)
                             .addGap(14, 14, 14)
-                            .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(171, 171, 171))
+                            .addComponent(dcDOB, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel2)
-                                        .addComponent(jLabel9))
+                                        .addComponent(jLabel9)
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                            .addGap(53, 53, 53)
+                                            .addGap(49, 49, 49)
                                             .addComponent(rbnMale)
                                             .addGap(32, 32, 32)
                                             .addComponent(rbnFemale)
                                             .addGap(0, 0, Short.MAX_VALUE))
                                         .addGroup(jPanel1Layout.createSequentialGroup()
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(edtFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                             .addComponent(jLabel5)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(edtLastName, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(12, 12, 12))))
+                                            .addComponent(edtLastName, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                     .addGap(2, 2, 2)
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jLabel4)
-                                                .addComponent(jLabel10))
+                                            .addComponent(jLabel4)
                                             .addGap(17, 17, 17)))
                                     .addGap(41, 41, 41)
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -150,29 +173,36 @@ public class EnterProfile extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(238, Short.MAX_VALUE))
+                .addGap(105, 105, 105)
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 119, Short.MAX_VALUE)
+                .addComponent(btnEnterPI, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addGap(63, 63, 63)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel2)
-                        .addComponent(edtFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(edtLastName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(3, 3, 3)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(edtFirstName)
+                        .addComponent(edtLastName))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(10, 10, 10)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(dcDOB, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)))
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(rbnMale)
                         .addComponent(rbnFemale)
                         .addComponent(jLabel9))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(14, 14, 14)
-                            .addComponent(jLabel10)
-                            .addGap(18, 18, 18)
+                            .addGap(46, 46, 46)
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
                         .addGroup(jPanel1Layout.createSequentialGroup()
@@ -184,18 +214,18 @@ public class EnterProfile extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(edtAdress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(46, Short.MAX_VALUE)))
+                    .addContainerGap(117, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -208,6 +238,52 @@ public class EnterProfile extends javax.swing.JFrame {
     private void edtPhoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtPhoneActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_edtPhoneActionPerformed
+
+    private void btnEnterPIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnterPIActionPerformed
+        // TODO add your handling code here:
+        int id = HandleAccount.getIdAccount(userName);
+        String firstName = edtFirstName.getText();
+        String lastName = edtLastName.getText();
+        HandleDate hd =new HandleDate(dcDOB.getDate());
+        char gender;
+        if(rbnMale.isSelected()){
+            gender = 'M';
+        }
+        else if(rbnFemale.isSelected()){
+            gender = 'F';
+        }
+        else gender = 'U';
+        int age = (int) spnAge.getValue();
+        String phoneNumberString = edtPhone.getText();
+        long phoneNumber;
+        if(HandleNumber.isNumber(phoneNumberString)){
+              phoneNumber = Integer.parseInt(edtPhone.getText());
+              if(phoneNumberString.length()>10){
+                  JOptionPane.showMessageDialog(this, "length > 10 please enter phonenumber that length <=10", "warning length", JOptionPane.WARNING_MESSAGE);
+              }
+        }
+        else {
+             JOptionPane.showMessageDialog(this, "Phone must be the number ", "Phone error", JOptionPane.ERROR_MESSAGE);
+             return;
+        }
+       
+           
+        String address = edtAdress.getText();
+        Person p = new Person(id, firstName, lastName, gender, hd.getFullDateMySQL(), phoneNumber, address);
+        if(HandleAccount.enterInformation(id,p)){
+            JOptionPane.showMessageDialog(this
+                    , "add information to "+id+"successfully"
+                    , "successfully"
+                    ,JOptionPane.PLAIN_MESSAGE);
+            this.dispose();
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Error Enter Profile", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+           
+        
+       
+    }//GEN-LAST:event_btnEnterPIActionPerformed
 
     /**
      * @param args the command line arguments
@@ -240,18 +316,19 @@ public class EnterProfile extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new EnterProfile().setVisible(true);
+                new EnterProfile("nghiep").setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup btgGender;
+    private javax.swing.JButton btnEnterPI;
+    private com.toedter.calendar.JDateChooser dcDOB;
     private javax.swing.JTextField edtAdress;
     private javax.swing.JTextField edtFirstName;
     private javax.swing.JTextField edtLastName;
     private javax.swing.JTextField edtPhone;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

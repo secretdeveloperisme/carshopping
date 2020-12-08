@@ -7,7 +7,7 @@ package ui;
 
 import javax.swing.JOptionPane;
 import model.Account;
-import process.HandleLogin;
+import process.HandleAccount;
 
 /**
  *
@@ -175,9 +175,11 @@ public class CreateAccount extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "password must like confirm password");
             return;
         }
-        if(HandleLogin.createAccount(new Account(userName, passWord))){
+        if(HandleAccount.createAccount(new Account(userName, passWord))){
             JOptionPane.showMessageDialog(this, "Create Account Successfully");
-            this.setVisible(false);
+            new EnterProfile(userName).setVisible(true);
+            this.dispose();
+            
         }
         else {
             JOptionPane.showMessageDialog(this, "Create Account Unuccessfully");

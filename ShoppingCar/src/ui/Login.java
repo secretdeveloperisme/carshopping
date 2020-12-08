@@ -7,7 +7,7 @@ package ui;
 
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
-import process.HandleLogin;
+import process.HandleAccount;
 
 /**
  *
@@ -44,6 +44,7 @@ public class Login extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("LOGIN");
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Login"));
         jPanel2.setForeground(new java.awt.Color(255, 51, 204));
@@ -162,13 +163,23 @@ public class Login extends javax.swing.JFrame {
         // TODO add your handling code here:
         String username = edtUserName.getText();
         String password = edtPassWord.getText();
-        if(HandleLogin.Login(username, password)){
-            JOptionPane.showMessageDialog(this, "Login Successfully");
-            new ManageCar().setVisible(true);
-            this.setVisible(false);
-        }
+        if(HandleAccount.Login(username, password)){
+            int id = HandleAccount.getIdAccount(username);
+            char role = HandleAccount.getRole(id);
+            if(role == 'a'){
+                JOptionPane.showConfirmDialog(this, "Admin Login Successfully", "Success", JOptionPane.PLAIN_MESSAGE);
+                new ManageCar().setVisible(true);
+                this.dispose();
+            }
+            else 
+                if(role == 'u'){
+                    JOptionPane.showConfirmDialog(this, "User Login Successfully", "Success", JOptionPane.PLAIN_MESSAGE);
+                    new CustomerOperation(username).setVisible(true);
+                    this.dispose();
+                }
+        }     
         else
-             JOptionPane.showMessageDialog(this, "Login Unsuccessfully");
+             JOptionPane.showMessageDialog(this, "Login Unsuccessfully","error",JOptionPane.ERROR_MESSAGE);
         
     }//GEN-LAST:event_btnLoginActionPerformed
 

@@ -10,17 +10,19 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Vector;
 import javax.swing.JOptionPane;
-import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import model.Account;
 import model.Car;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import static process.HandleLogin.NAME_ROOT;
-import static process.HandleLogin.PASSWORD_ROOT;
+import static process.HandleAccount.NAME_ROOT;
+import static process.HandleAccount.PASSWORD_ROOT;
 import process.HandleManageCar;
 
 /**
@@ -35,7 +37,6 @@ public class ManageCar extends javax.swing.JFrame {
     public ManageCar() {
         initComponents();
         addEvents();
-        
         this.pack();
         this.setLocationRelativeTo(null);
         updateTableCar();
@@ -72,21 +73,13 @@ public class ManageCar extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblCar = new javax.swing.JTable();
         jLabel6 = new javax.swing.JLabel();
-        pnlOrder = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
-        jCalendar1 = new com.toedter.calendar.JCalendar();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tblCarBuying = new javax.swing.JTable();
-        jLabel8 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
         jplHistoryBuy = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Manage Car");
 
         pnlModify.setBackground(new java.awt.Color(128, 170, 255));
 
@@ -123,6 +116,11 @@ public class ManageCar extends javax.swing.JFrame {
         });
 
         btnEdit.setText("EDIT");
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
 
         btnReset.setText("RESET");
         btnReset.addActionListener(new java.awt.event.ActionListener() {
@@ -270,122 +268,29 @@ public class ManageCar extends javax.swing.JFrame {
                 .addGroup(pnlModifyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(pnlModifyLayout.createSequentialGroup()
-                        .addGap(227, 227, 227)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 222, Short.MAX_VALUE)))
+                        .addGroup(pnlModifyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlModifyLayout.createSequentialGroup()
+                                .addGap(26, 26, 26)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 655, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pnlModifyLayout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(pnlModifyLayout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 655, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlModifyLayout.setVerticalGroup(
             pnlModifyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlModifyLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(53, 53, 53))
+                .addGap(38, 38, 38))
         );
 
         pnlOrde.addTab("modify", pnlModify);
-
-        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setText(" Order Car");
-
-        tblCarBuying.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
-            },
-            new String [] {
-                "id car", "name car", "name brand", "price ", "Country", "amount"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, true, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane2.setViewportView(tblCarBuying);
-
-        jLabel8.setText("Find Car");
-
-        jButton1.setText("Buy");
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jCalendar1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 483, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2)
-                .addContainerGap())
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(69, 69, 69)
-                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(130, 130, 130))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jCalendar1, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(38, 38, 38)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
-                .addComponent(jButton1)
-                .addContainerGap(324, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout pnlOrderLayout = new javax.swing.GroupLayout(pnlOrder);
-        pnlOrder.setLayout(pnlOrderLayout);
-        pnlOrderLayout.setHorizontalGroup(
-            pnlOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlOrderLayout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 687, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 19, Short.MAX_VALUE))
-        );
-        pnlOrderLayout.setVerticalGroup(
-            pnlOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlOrderLayout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-
-        pnlOrde.addTab("order", pnlOrder);
 
         jLabel9.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -426,7 +331,7 @@ public class ManageCar extends javax.swing.JFrame {
             .addGroup(jplHistoryBuyLayout.createSequentialGroup()
                 .addGap(204, 204, 204)
                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(227, Short.MAX_VALUE))
+                .addContainerGap(212, Short.MAX_VALUE))
             .addGroup(jplHistoryBuyLayout.createSequentialGroup()
                 .addComponent(jScrollPane3)
                 .addContainerGap())
@@ -436,12 +341,12 @@ public class ManageCar extends javax.swing.JFrame {
             .addGroup(jplHistoryBuyLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 120, Short.MAX_VALUE)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(100, 100, 100))
         );
 
-        pnlOrde.addTab("tab3", jplHistoryBuy);
+        pnlOrde.addTab("bill", jplHistoryBuy);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -453,7 +358,9 @@ public class ManageCar extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlOrde, javax.swing.GroupLayout.PREFERRED_SIZE, 549, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(pnlOrde, javax.swing.GroupLayout.PREFERRED_SIZE, 569, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -466,11 +373,36 @@ public class ManageCar extends javax.swing.JFrame {
         spnAmount.setValue(0);
         edtBrand.setText("");
         cbbCountry.setSelectedIndex(0);
-
     }//GEN-LAST:event_btnResetActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        // TODO add your handling code here:
+        int n = tblCar.getSelectedRow();
+        Car  c = new Car();
+        c.setId((int) tblCar.getValueAt(n, 0));
+        c.setNameCar((String) tblCar.getValueAt(n, 1));
+        c.setPrice((int) tblCar.getValueAt(n, 2));
+        c.setAmount((int) tblCar.getValueAt(n, 3));
+        c.setName_brand((String) tblCar.getValueAt(n, 4));
+        c.setCountry((String) tblCar.getValueAt(n, 5));
+        new EditCar(c,this).setVisible(true);
+
+    }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         // TODO add your handling code here:
+        int n = tblCar.getSelectedRow();
+
+        int id = (int) tblCar.getValueAt(n,0);
+        boolean valid = HandleManageCar.deleteCar(id);
+        if (valid){
+            JOptionPane.showMessageDialog(this, "ban da xoa thanh cong "+id);
+            updateTableCar();
+        }
+        else {
+            JOptionPane.showMessageDialog(this, "ban da xoa that bai", "error", JOptionPane.ERROR_MESSAGE);
+        }
+
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnAddCarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddCarActionPerformed
@@ -505,31 +437,26 @@ public class ManageCar extends javax.swing.JFrame {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(sql);
             DefaultTableModel dtm = (DefaultTableModel) tblCar.getModel();
+            
             c = dtm.getColumnCount();
             dtm.setRowCount(0);
             while(resultSet.next()){
-                 Vector v = new Vector<>();
-                for(int i = 1;i <= c;i++){
-                   
+                 Vector v = new Vector(c);
+                for(int i = 1;i <= c; i++){
                     v.add(resultSet.getInt("id_car"));
-                    v.add(resultSet.getString("name_car"));
+                    v.add(resultSet.getString("name_car")); 
                     v.add(resultSet.getInt("price"));
                     v.add(resultSet.getInt("amount"));
                     v.add(resultSet.getString("name_brand"));
                     v.add(resultSet.getString("country"));
                    
                 }
-                
                 dtm.addRow(v);
-     
-                
-                
             }
             
             resultSet.close();
             statement.close();
             connection.close();
-            
         }
         catch(SQLException e){
             System.out.println(e.getMessage());
@@ -586,32 +513,23 @@ public class ManageCar extends javax.swing.JFrame {
     private javax.swing.JTextField edtBrand;
     private javax.swing.JTextField edtName;
     private javax.swing.JTextField edtPrice;
-    private javax.swing.JButton jButton1;
-    private com.toedter.calendar.JCalendar jCalendar1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JPanel jplHistoryBuy;
     private javax.swing.JPanel pnlModify;
     private javax.swing.JTabbedPane pnlOrde;
-    private javax.swing.JPanel pnlOrder;
     private javax.swing.JSpinner spnAmount;
     private javax.swing.JTable tblCar;
-    private javax.swing.JTable tblCarBuying;
     // End of variables declaration//GEN-END:variables
 
     private void addEvents() {
@@ -620,18 +538,25 @@ public class ManageCar extends javax.swing.JFrame {
         select.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
+               
                 if(e.getValueIsAdjusting())
                     return;
-                Car car = new Car();
                 int row = tblCar.getSelectedRow();
+                if(row != -1){
+                Car car = new Car();
                 car.setNameCar((String) tblCar.getValueAt(row, 1));
-                car.setPrice((int) tblCar.getValueAt(row, 2));
+                car.setPrice((int) tblCar.getValueAt(row,2));
                 car.setAmount((int) tblCar.getValueAt(row, 3));
                 car.setName_brand((String) tblCar.getValueAt(row, 4));
                 car.setCountry((String) tblCar.getValueAt(row, 5));
+                System.out.println("select: "+e.toString());
                 new DetailCar(car).setVisible(true);
-                System.out.println("select");
+                }
+            
             }
         });
+    
     }
+
+    
 }

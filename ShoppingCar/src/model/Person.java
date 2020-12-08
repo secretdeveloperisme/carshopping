@@ -10,7 +10,7 @@ package model;
  * @author linh2
  */
 public class Person {
-    private String id;
+    private int id;
     private String firstName;
     private String lastName;
     private char gender;
@@ -19,7 +19,7 @@ public class Person {
     private String address;
 
     public Person() {
-        this.id="xxx";
+        this.id=0;
         this.firstName="unknown";
         this.lastName="unknown";
         this.gender='N';
@@ -28,7 +28,7 @@ public class Person {
         this.address="No Address";
     }
     
-    public Person(String id,String firstName, String lastName, char gender, String dateOfBirth, long phoneNumber, String address) {
+    public Person(int id,String firstName, String lastName, char gender, String dateOfBirth, long phoneNumber, String address) {
         this.id=id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -38,11 +38,11 @@ public class Person {
         this.address = address;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -97,7 +97,7 @@ public class Person {
 
     @Override
     public String toString() {
-        return "Person{" + "firstName=" + firstName + ", lastName=" + lastName + ", gender=" + gender + ", dateOfBirth=" + dateOfBirth + ", phoneNumber=" + phoneNumber + ", address=" + address + '}';
+        return "Person{" +"id= "+id+ " firstName=" + firstName + ", lastName=" + lastName + ", gender=" + gender + ", dateOfBirth=" + dateOfBirth + ", phoneNumber=" + phoneNumber + ", address=" + address + '}';
     }
     
     

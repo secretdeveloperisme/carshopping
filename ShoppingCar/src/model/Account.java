@@ -13,11 +13,13 @@ public class Account {
     private int id;
     private String userName;
     private String passWord;
+    private int balance;
 
-    public Account(int id, String userName, String passWord) {
+    public Account(int id, String userName, String passWord,int balance) {
         this.id = id;
         this.userName = userName;
         this.passWord = passWord;
+        this.balance = balance;
     }
     public Account(String userName, String passWord){
         this.id=0;
@@ -48,11 +50,17 @@ public class Account {
     public void setPassWord(String passWord) {
         this.passWord = passWord;
     }
+    public int getBalance() {
+        return balance;
+    }
+
+    public void setBalance(int balance) {
+        this.balance = balance;
+    }
 
     @Override
     public String toString() {
-        return "Account{" + "id=" + id + ", userName=" + userName + ", passWord=" + passWord + '}';
+        return "Account{" + "id=" + id + ", userName=" + userName + ", passWord=" + passWord + ", balance=" + balance + '}';
     }
-    
     
 }
