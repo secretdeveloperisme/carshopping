@@ -201,6 +201,45 @@ public static boolean createAccount(Account account){
             return null;
         }
     }
+    public static boolean updateInformation (Person person){
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/carshopping", NAME_ROOT, PASSWORD_ROOT);
+            String sql = " update person set "
+                                            + "first_name = ?,"
+                                            + "last_name = ?,"
+                                            + "gender = ?,"
+                                            + "date_of_birth = ?,"
+                                            + "phone_number = ?,"
+                                            + "address = ?"+""
+                                             + "where id = ?";
+            preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
+            
+            preparedStatement.setString(1, person.getFirstName());
+            preparedStatement.setString(2, person.getLastName());
+            preparedStatement.setString(3, person.getGender()+"");
+            preparedStatement.setString(4, person.getDateOfBirth());
+            preparedStatement.setLong(5, person.getPhoneNumber());
+            preparedStatement.setString(6,person.getAddress() );
+            preparedStatement.setInt(7, person.getId());
+            preparedStatement.executeUpdate();
+            //
+            preparedStatement.close();
+            connection.close();
+            return true;
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+            return false;
+            
+        }
+        catch(ClassNotFoundException e){
+            System.out.println("");
+            return false;
+        }
+    }
     public static void main(String[] args) {
 //        System.out.println(Login("linh", "linh123"));
 //        System.out.println(getIdAccount("linh"));
