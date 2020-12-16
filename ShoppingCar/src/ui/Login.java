@@ -58,12 +58,22 @@ public class Login extends javax.swing.JFrame {
                 edtUserNameActionPerformed(evt);
             }
         });
+        edtUserName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                edtUserNameKeyPressed(evt);
+            }
+        });
 
         jLabel2.setText("Password");
 
         edtPassWord.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 edtPassWordActionPerformed(evt);
+            }
+        });
+        edtPassWord.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                edtPassWordKeyPressed(evt);
             }
         });
 
@@ -154,13 +164,7 @@ public class Login extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void edtPassWordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtPassWordActionPerformed
-            // TODO add your handling code here:
-    }//GEN-LAST:event_edtPassWordActionPerformed
-
-    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        // TODO add your handling code here:
+    private void isValidLogin(){
         String username = edtUserName.getText();
         String password = edtPassWord.getText();
         if(HandleAccount.Login(username, password)){
@@ -180,6 +184,15 @@ public class Login extends javax.swing.JFrame {
         }     
         else
              JOptionPane.showMessageDialog(this, "Login Unsuccessfully","error",JOptionPane.ERROR_MESSAGE);
+    }
+    private void edtPassWordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtPassWordActionPerformed
+            // TODO add your handling code here:
+    }//GEN-LAST:event_edtPassWordActionPerformed
+
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        // TODO add your handling code here:
+        isValidLogin();
+        
         
     }//GEN-LAST:event_btnLoginActionPerformed
 
@@ -192,6 +205,19 @@ public class Login extends javax.swing.JFrame {
         new CreateAccount().setVisible(true);
         
     }//GEN-LAST:event_btnSignUpActionPerformed
+
+    private void edtUserNameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_edtUserNameKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+            isValidLogin();
+        }
+    }//GEN-LAST:event_edtUserNameKeyPressed
+
+    private void edtPassWordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_edtPassWordKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER)
+            isValidLogin();
+    }//GEN-LAST:event_edtPassWordKeyPressed
 
     /**
      * @param args the command line arguments

@@ -124,6 +124,44 @@ public class HandleCustomer {
             return null;
         }
     }
+    public static ArrayList<Vector> getAllHistoryBuyingCustomer(){
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        ArrayList<Vector>  vectors= new ArrayList<Vector>();
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/carshopping", NAME_ROOT, PASSWORD_ROOT);
+            String sqlHBC = "call showHistoryBuyingCustomer(?)";
+            preparedStatement = (PreparedStatement) connection.prepareCall(sqlHBC);
+            preparedStatement.setInt(1,-1);
+            resultSet = preparedStatement.executeQuery();
+            int i =0;
+            while(resultSet.next()){
+                Vector v = new Vector();
+                v.add(resultSet.getInt("id_order"));
+                v.add(resultSet.getString("first_name")+" "+resultSet.getString("last_name"));
+                v.add(resultSet.getString("name_car"));
+                v.add(resultSet.getString("buying_time"));
+                v.add(resultSet.getInt("amount"));
+                v.add(resultSet.getInt("total"));
+                vectors.add(v);
+                i++;
+            }
+            preparedStatement.close();
+            connection.close();
+            return vectors;
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+            return null;
+            
+        }
+        catch(ClassNotFoundException e){
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
     public static void main(String[] args) {
         System.out.println(getHistoryBuyingCustomer(-1));
     }

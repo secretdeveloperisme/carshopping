@@ -25,6 +25,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import static process.HandleAccount.NAME_ROOT;
 import static process.HandleAccount.PASSWORD_ROOT;
+import process.HandleCustomer;
 import process.HandleManageCar;
 
 /**
@@ -42,6 +43,7 @@ public class ManageCar extends javax.swing.JFrame {
         this.pack();
         this.setLocationRelativeTo(null);
         updateTableCar();
+        updateHistoryBuyingTable();
     }
 
     /**
@@ -79,7 +81,7 @@ public class ManageCar extends javax.swing.JFrame {
         jplHistoryBuy = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblHistoryBuyingCar = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Manage Car");
@@ -313,8 +315,12 @@ public class ManageCar extends javax.swing.JFrame {
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel9.setText("HISTORY BUYING CAR");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblHistoryBuyingCar.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -339,7 +345,10 @@ public class ManageCar extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane3.setViewportView(jTable1);
+        jScrollPane3.setViewportView(tblHistoryBuyingCar);
+        if (tblHistoryBuyingCar.getColumnModel().getColumnCount() > 0) {
+            tblHistoryBuyingCar.getColumnModel().getColumn(1).setPreferredWidth(150);
+        }
 
         javax.swing.GroupLayout jplHistoryBuyLayout = new javax.swing.GroupLayout(jplHistoryBuy);
         jplHistoryBuy.setLayout(jplHistoryBuyLayout);
@@ -359,8 +368,8 @@ public class ManageCar extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 120, Short.MAX_VALUE)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(100, 100, 100))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(151, 151, 151))
         );
 
         pnlOrde.addTab("bill", jplHistoryBuy);
@@ -491,6 +500,14 @@ public class ManageCar extends javax.swing.JFrame {
             
         } 
     }
+    public void updateHistoryBuyingTable(){
+        ArrayList<Vector> rows =HandleCustomer.getAllHistoryBuyingCustomer();
+        DefaultTableModel dtm = (DefaultTableModel) tblHistoryBuyingCar.getModel();
+        dtm.setRowCount(0);
+        rows.forEach(it ->
+                dtm.addRow(it)
+        );
+    }
     /**
      * @param args the command line arguments
      */
@@ -548,12 +565,12 @@ public class ManageCar extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jTable1;
     private javax.swing.JPanel jplHistoryBuy;
     private javax.swing.JPanel pnlModify;
     private javax.swing.JTabbedPane pnlOrde;
     private javax.swing.JSpinner spnAmount;
     private javax.swing.JTable tblCar;
+    private javax.swing.JTable tblHistoryBuyingCar;
     // End of variables declaration//GEN-END:variables
 
     private void addEvents() {

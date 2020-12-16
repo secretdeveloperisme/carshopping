@@ -121,6 +121,7 @@
         <Component class="javax.swing.JTextField" name="edtUserName">
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="edtUserNameActionPerformed"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="edtUserNameKeyPressed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel2">
@@ -131,6 +132,7 @@
         <Component class="javax.swing.JPasswordField" name="edtPassWord">
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="edtPassWordActionPerformed"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="edtPassWordKeyPressed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnLogin">
