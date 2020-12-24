@@ -5,7 +5,9 @@
         <group>
             <file>file:/E:/Projects/CarShoppingProject/carshopping/ShoppingCar/src/process/HandleCustomer.java</file>
             <file>file:/E:/Projects/CarShoppingProject/carshopping/ShoppingCar/src/ui/Login.java</file>
+            <file>file:/E:/Projects/CarShoppingProject/carshopping/ShoppingCar/src/ui/CustomerOperation.java</file>
             <file>file:/E:/Projects/CarShoppingProject/carshopping/ShoppingCar/src/ui/ManageCar.java</file>
+            <file>file:/E:/Projects/CarShoppingProject/carshopping/ShoppingCar/src/process/HandleAccount.java</file>
         </group>
     </open-files>
 </project-private>
