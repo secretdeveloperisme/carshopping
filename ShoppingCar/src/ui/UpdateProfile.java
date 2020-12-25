@@ -5,6 +5,7 @@
  */
 package ui;
 
+import java.util.Date;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import model.Person;
@@ -18,7 +19,8 @@ import process.HandleNumber;
  */
 public class UpdateProfile extends javax.swing.JFrame {
     private String userName;
-    CustomerOperation parent;
+    private CustomerOperation parent;
+    private boolean isHas ;
     /**
      * Creates new form UpdateProfile
      */
@@ -26,6 +28,7 @@ public class UpdateProfile extends javax.swing.JFrame {
         this.userName = username;
         this.parent = (CustomerOperation) parent;
         initComponents();
+        loadProfile();
     }
 
     /**
@@ -57,6 +60,7 @@ public class UpdateProfile extends javax.swing.JFrame {
         btnEnterPI = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Add Or Update");
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -232,9 +236,29 @@ public class UpdateProfile extends javax.swing.JFrame {
     private void edtPhoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edtPhoneActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_edtPhoneActionPerformed
-
+    private void loadProfile(){
+        int idAccount = HandleAccount.getIdAccount(this.userName);
+        isHas = HandleAccount.isHasProfile(idAccount);
+        if (isHas) {
+            Person p = HandleAccount.getPersonViaID(idAccount);
+            edtFirstName.setText(p.getFirstName());
+            edtLastName.setText(p.getLastName());
+            dcDOB.setDate(new Date());
+            if(p.getGender() == 'M'){
+                rbnMale.setSelected(true);
+            }
+            int age = Integer.parseInt(new HandleDate().getYear()) - Integer.parseInt(new HandleDate(dcDOB.getDate()).getYear());
+            spnAge.setValue(age);
+            edtPhone.setText(String.valueOf(p.getPhoneNumber()));
+            edtAdress.setText(p.getAddress());
+        }
+    }
     private void btnEnterPIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnterPIActionPerformed
         // TODO add your handling code here:
+         updateOrAdd();
+        
+    }//GEN-LAST:event_btnEnterPIActionPerformed
+    public void updateOrAdd(){
         int id = HandleAccount.getIdAccount(userName);
         String firstName = edtFirstName.getText();
         String lastName = edtLastName.getText();
@@ -263,9 +287,10 @@ public class UpdateProfile extends javax.swing.JFrame {
 
         String address = edtAdress.getText();
         Person p = new Person(id, firstName, lastName, gender, hd.getFullDateMySQL(), phoneNumber, address);
-        if(HandleAccount.updateInformation(p)){
+        if(isHas){
+            if(HandleAccount.updateInformation(p)){
             JOptionPane.showMessageDialog(this
-                , "update information to "+id+"successfully"
+                , "update information to "+id+" successfully"
                 , "successfully"
                 ,JOptionPane.PLAIN_MESSAGE);
             this.parent.loadUser();
@@ -277,9 +302,24 @@ public class UpdateProfile extends javax.swing.JFrame {
             
             this.dispose();
         }
-
-    }//GEN-LAST:event_btnEnterPIActionPerformed
-
+        }
+        else {
+            if(HandleAccount.enterInformation(id, p)){
+                 JOptionPane.showMessageDialog(this
+                , "add information to ["+id+"] successfully"
+                , "successfully"
+                ,JOptionPane.PLAIN_MESSAGE);
+                this.parent.loadUser();
+                this.parent.initCustomiseComponents();
+                this.dispose();
+            }
+            else{
+                JOptionPane.showMessageDialog(this, "Error enter Profile", "Error", JOptionPane.ERROR_MESSAGE);
+                this.dispose();
+            }
+        }
+        
+    }
     /**
      * @param args the command line arguments
      */

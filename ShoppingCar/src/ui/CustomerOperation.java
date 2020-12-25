@@ -28,6 +28,7 @@ import process.HandleManageCar;
 public class CustomerOperation extends javax.swing.JFrame {
     private Person p;
     private String username;
+    private int money;
     /**
      * Creates new form CustomerOperation
      */
@@ -63,6 +64,8 @@ public class CustomerOperation extends javax.swing.JFrame {
         btnBuy = new javax.swing.JButton();
         txtDateAndTime = new javax.swing.JLabel();
         btnSearch = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        edtMoney = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -75,7 +78,7 @@ public class CustomerOperation extends javax.swing.JFrame {
         txtName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         txtName.setText("welcome user");
 
-        cbxManageAccount.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Manage Account", "Edit Profile", "Recharge money", "Information" }));
+        cbxManageAccount.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Manage Account", "Edit Profile", "Recharge money", "Information", "Logout" }));
         cbxManageAccount.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbxManageAccountActionPerformed(evt);
@@ -145,14 +148,28 @@ public class CustomerOperation extends javax.swing.JFrame {
             }
         });
 
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel2.setText("Your Current Money : ");
+
+        edtMoney.setEditable(false);
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(txtDateAndTime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(txtDateAndTime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(43, 43, 43)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(edtMoney, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30))
             .addGroup(jPanel3Layout.createSequentialGroup()
@@ -181,8 +198,11 @@ public class CustomerOperation extends javax.swing.JFrame {
                         .addGap(21, 21, 21)
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(45, 45, 45)
-                        .addComponent(txtDateAndTime, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtDateAndTime, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(edtMoney, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(97, 97, 97)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -304,9 +324,29 @@ public class CustomerOperation extends javax.swing.JFrame {
             new UpdateProfile(this.username,this).setVisible(true);
         }
         if(command == 2)
-            System.out.println("recharge money");
+        {
+            String cardCode = JOptionPane.showInputDialog(this,"Please input the CardCode");
+            System.out.println(cardCode);
+            if(HandleAccount.getAmountMoneyCard(cardCode)==0){
+                JOptionPane.showMessageDialog(this, "Amount of "+cardCode+" = 0","error",JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if(HandleAccount.addMoney(this.p.getId(), cardCode)){
+                JOptionPane.showMessageDialog(this,"add Money successfully");
+                loadUser();
+                initCustomiseComponents();
+            }
+            else {
+                JOptionPane.showMessageDialog(this,"add Money Unsuccessfully");
+            }
+        }
         if(command == 3)
-            System.out.println("infor");
+            JOptionPane.showMessageDialog(this, p.toString(),"information: "+this.username,JOptionPane.PLAIN_MESSAGE);
+        if(command==4){
+            this.dispose();
+            new Login().setVisible(true);
+        }
+            
     }//GEN-LAST:event_cbxManageAccountActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
@@ -335,6 +375,8 @@ public class CustomerOperation extends javax.swing.JFrame {
         HandleDate hd = new HandleDate();
         if(HandleCustomer.buyCar(car, this.p,totalAmount , hd.getFullDateMySQL())){
             JOptionPane.showMessageDialog(this, "buy success");
+            loadUser();
+            initCustomiseComponents();
             updateHistoryBuyingCustomer();
         }
             
@@ -398,7 +440,9 @@ public class CustomerOperation extends javax.swing.JFrame {
     private javax.swing.JButton btnSearch;
     private javax.swing.JComboBox<String> cbxManageAccount;
     private javax.swing.JTextField edtFindCar;
+    private javax.swing.JTextField edtMoney;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
@@ -417,12 +461,15 @@ public class CustomerOperation extends javax.swing.JFrame {
         HandleDate hd = new HandleDate();
         txtDateAndTime.setText(hd.getFullDate());
         txtName.setText(p.getFirstName()+" "+p.getLastName());
+        edtMoney .setText(money+" $");
+        
     }
 
     public void loadUser() {
        int id = HandleAccount.getIdAccount(username);
        this.p = HandleAccount.getPersonViaID(id);
        this.p.setId(id);
+       this.money = HandleAccount.getBalanceAccount(username);
        
     }
 

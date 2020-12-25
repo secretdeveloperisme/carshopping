@@ -107,7 +107,34 @@ public static boolean createAccount(Account account){
             return 0;
     }
     }
-    
+    public static int getBalanceAccount(String userName){
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        ArrayList<Account> accounts = new ArrayList<>();
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/carshopping", NAME_ROOT, PASSWORD_ROOT);
+            String sql= "select balance from person_account where person_account.user_name in('"+userName+"')";
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(sql);
+            resultSet.next();
+            int balance = resultSet.getInt("balance");
+            resultSet.close();
+            statement.close();
+            connection.close();
+            return balance;
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+            return 0;
+            
+        }
+        catch(ClassNotFoundException e){
+            e.getMessage();
+            return 0;
+    }
+    }
     public static boolean enterInformation (int id ,Person person){
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -236,16 +263,102 @@ public static boolean createAccount(Account account){
             
         }
         catch(ClassNotFoundException e){
-            System.out.println("");
+            System.out.println(e.getMessage());
             return false;
+        }
+    }
+    public static boolean addMoney (int idAccount,String carCode){
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/carshopping", NAME_ROOT, PASSWORD_ROOT);
+            String sql = "call addMoney(?,?)";
+            preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
+            preparedStatement.setInt(1,idAccount);
+            preparedStatement.setString(2,carCode);
+            preparedStatement.execute();
+            //
+            preparedStatement.close();
+            connection.close();
+            return true;
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+            return false;
+            
+        }
+        catch(ClassNotFoundException e){
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+    public static boolean isHasProfile(int id) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/carshopping",NAME_ROOT,PASSWORD_ROOT);
+            String sql = "Select isHasProfile("+id+") as has";
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(sql);
+            resultSet.next();
+            boolean isHas = resultSet.getBoolean("has");
+            if(isHas)
+                return true;
+            else 
+                return false;
+            
+        }
+        catch(ClassNotFoundException cfe){
+            System.out.println(cfe.getMessage());
+            return false;
+        }
+        catch(SQLException sqle){
+            System.out.println(sqle.getMessage());
+            return false;
+        }
+        
+    }
+    public static int getAmountMoneyCard (String carCode){
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/carshopping", NAME_ROOT, PASSWORD_ROOT);
+            String sql = "select getAmountMoneyCard(?) as amount";
+            preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
+            preparedStatement.setString(1,carCode);
+            resultSet =preparedStatement.executeQuery();
+            resultSet.next();
+            int amount = resultSet.getInt("amount");
+            
+            //
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+            return amount;
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+            return 0;
+            
+        }
+        catch(ClassNotFoundException e){
+            System.out.println(e.getMessage());
+            return 0;
         }
     }
     public static void main(String[] args) {
 //        System.out.println(Login("linh", "linh123"));
 //        System.out.println(getIdAccount("linh"));
-         int id = getIdAccount("linh");
-         System.out.println(getRole(id));
-         
+//         int id = getIdAccount("linh");
+//         System.out.println(getBalanceAccount("linh"));
+//         System.out.println(getRole(id));
+//         System.out.println(isHasProfile(0));
+         System.out.println(addMoney(7,"Card123"));
     }
    
 }

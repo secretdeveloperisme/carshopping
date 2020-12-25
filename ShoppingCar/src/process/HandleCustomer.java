@@ -32,13 +32,23 @@ public class HandleCustomer {
         try{
             Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/carshopping", NAME_ROOT, PASSWORD_ROOT);
-            
             String sql_car = "SELECT amount FROM car where id_car = "+car.getId();
             statement = (Statement) connection.createStatement();
             resultSet = statement.executeQuery(sql_car);
             resultSet.next();
+            //query amount
             int amout_car = resultSet.getInt("amount");
-            if(amout_car > amount){ 
+            String sqlIsHaveEnough = "SELECT isHaveEnoughMoney("+p.getId()+","+amount*(car.getPrice())+") as isHaveEnough";
+            resultSet = statement.executeQuery(sqlIsHaveEnough);
+            resultSet.next();
+            //test current amount greater than minusAmout
+            boolean isHaveEnoughMoney = resultSet.getBoolean("isHaveEnough");
+            System.out.println(isHaveEnoughMoney);
+            if(!isHaveEnoughMoney){
+                System.out.println("not have enough money !");
+                return false;
+            }
+            if(amout_car >= amount){ 
             // add to orders
             String sql = " INSERT INTO orders(id_customer,id_car,buying_time,amount,total)  values(?,?,?,?,?)";
             preparedStatement = (PreparedStatement) connection.prepareStatement(sql);
@@ -55,17 +65,17 @@ public class HandleCustomer {
             preparedStatement.setInt(1,car.getId());
             preparedStatement.setInt(2, amount);
             preparedStatement.execute();
+            //minus Money
+            String sqlMinusMoney = "call minusMoney(?,?)";
+            preparedStatement = (PreparedStatement) connection.prepareCall(sqlMinusMoney);
+            preparedStatement.setInt(1, p.getId());
+            preparedStatement.setInt(2,amount*car.getPrice());
+            resultSet = preparedStatement.executeQuery();
             }
             else {
                 System.out.println("amount that you buy greater than availabel");
                 return false;
             }
-            
-            
-            
-            
-            
-            
             //update amount in table car
             
             //
@@ -162,6 +172,7 @@ public class HandleCustomer {
             return null;
         }
     }
+    
     public static void main(String[] args) {
         System.out.println(getHistoryBuyingCustomer(-1));
     }
