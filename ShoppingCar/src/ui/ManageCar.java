@@ -5,6 +5,9 @@
  */
 package ui;
 
+import com.mysql.jdbc.PreparedStatement;
+import java.awt.Color;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
@@ -16,6 +19,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.Account;
@@ -23,6 +28,12 @@ import model.Car;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
 import static process.HandleAccount.NAME_ROOT;
 import static process.HandleAccount.PASSWORD_ROOT;
 import process.HandleCustomer;
@@ -44,6 +55,8 @@ public class ManageCar extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         updateTableCar();
         updateHistoryBuyingTable();
+        pnStaMonth.setVisible(false);
+        pnStaYear.setVisible(false);
     }
 
     /**
@@ -82,6 +95,30 @@ public class ManageCar extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblHistoryBuyingCar = new javax.swing.JTable();
+        pnStatistic = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        pnStaMonth = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel11 = new javax.swing.JLabel();
+        txtYear = new javax.swing.JTextField();
+        btnOkMonth = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tbStatistic = new javax.swing.JTable();
+        btnChartMonth = new javax.swing.JButton();
+        cbType = new javax.swing.JComboBox<>();
+        pnStaYear = new javax.swing.JPanel();
+        jPanel7 = new javax.swing.JPanel();
+        jPanel8 = new javax.swing.JPanel();
+        txtYearFrom = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        txtYearTo = new javax.swing.JTextField();
+        btnOkYear = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        tbStatistic1 = new javax.swing.JTable();
+        btnChartYear = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Manage Car");
@@ -112,6 +149,11 @@ public class ManageCar extends javax.swing.JFrame {
         });
 
         btnFind.setText("FIND");
+        btnFind.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFindActionPerformed(evt);
+            }
+        });
 
         btnDelete.setText("DELETE");
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
@@ -320,10 +362,6 @@ public class ManageCar extends javax.swing.JFrame {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
                 {null, null, null, null, null, null}
             },
             new String [] {
@@ -346,9 +384,6 @@ public class ManageCar extends javax.swing.JFrame {
             }
         });
         jScrollPane3.setViewportView(tblHistoryBuyingCar);
-        if (tblHistoryBuyingCar.getColumnModel().getColumnCount() > 0) {
-            tblHistoryBuyingCar.getColumnModel().getColumn(1).setPreferredWidth(150);
-        }
 
         javax.swing.GroupLayout jplHistoryBuyLayout = new javax.swing.GroupLayout(jplHistoryBuy);
         jplHistoryBuy.setLayout(jplHistoryBuyLayout);
@@ -357,7 +392,7 @@ public class ManageCar extends javax.swing.JFrame {
             .addGroup(jplHistoryBuyLayout.createSequentialGroup()
                 .addGap(204, 204, 204)
                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(212, Short.MAX_VALUE))
+                .addContainerGap(327, Short.MAX_VALUE))
             .addGroup(jplHistoryBuyLayout.createSequentialGroup()
                 .addComponent(jScrollPane3)
                 .addContainerGap())
@@ -368,11 +403,343 @@ public class ManageCar extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 120, Short.MAX_VALUE)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(151, 151, 151))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(100, 100, 100))
         );
 
         pnlOrde.addTab("bill", jplHistoryBuy);
+
+        jLabel3.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        jLabel3.setText("REVENUE STATISTIC BY ");
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel3)
+                .addContainerGap())
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addGap(0, 12, Short.MAX_VALUE)
+                .addComponent(jLabel3))
+        );
+
+        jLabel11.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabel11.setText("Choose year: ");
+
+        txtYear.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        txtYear.setText("2020");
+        txtYear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtYearActionPerformed(evt);
+            }
+        });
+        txtYear.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtYearKeyPressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel11)
+                .addGap(18, 18, 18)
+                .addComponent(txtYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(txtYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        btnOkMonth.setText("OK");
+        btnOkMonth.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOkMonthActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnOkMonth)
+                .addContainerGap(22, Short.MAX_VALUE))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 12, Short.MAX_VALUE))
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnOkMonth)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        tbStatistic.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"1", null, null},
+                {"2", null, null},
+                {"3", null, null},
+                {"4", null, null},
+                {"5", null, null},
+                {"6", null, null},
+                {"7", null, null},
+                {"8", null, null},
+                {"9", null, null},
+                {"10", null, null},
+                {"11", null, null},
+                {"12", null, null}
+            },
+            new String [] {
+                "Month", "Amount Sale", "Revenue"
+            }
+        ));
+        jScrollPane2.setViewportView(tbStatistic);
+
+        btnChartMonth.setText("Chart");
+        btnChartMonth.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChartMonthActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnStaMonthLayout = new javax.swing.GroupLayout(pnStaMonth);
+        pnStaMonth.setLayout(pnStaMonthLayout);
+        pnStaMonthLayout.setHorizontalGroup(
+            pnStaMonthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnStaMonthLayout.createSequentialGroup()
+                .addGroup(pnStaMonthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnStaMonthLayout.createSequentialGroup()
+                        .addGap(437, 437, 437)
+                        .addComponent(btnChartMonth))
+                    .addGroup(pnStaMonthLayout.createSequentialGroup()
+                        .addGap(82, 82, 82)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnStaMonthLayout.createSequentialGroup()
+                        .addGap(136, 136, 136)
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(99, Short.MAX_VALUE))
+        );
+        pnStaMonthLayout.setVerticalGroup(
+            pnStaMonthLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnStaMonthLayout.createSequentialGroup()
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnChartMonth)
+                .addContainerGap(45, Short.MAX_VALUE))
+        );
+
+        cbType.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        cbType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Month", "Year" }));
+        cbType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbTypeActionPerformed(evt);
+            }
+        });
+
+        txtYearFrom.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        txtYearFrom.setText("2020");
+        txtYearFrom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtYearFromActionPerformed(evt);
+            }
+        });
+        txtYearFrom.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtYearFromKeyPressed(evt);
+            }
+        });
+
+        jLabel8.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabel8.setText("From: ");
+
+        jLabel12.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabel12.setText("To:");
+
+        txtYearTo.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        txtYearTo.setText("2020");
+        txtYearTo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtYearToActionPerformed(evt);
+            }
+        });
+        txtYearTo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtYearToKeyPressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtYearFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtYearTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtYearFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel8))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel12)
+                        .addComponent(txtYearTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        btnOkYear.setText("OK");
+        btnOkYear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOkYearActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnOkYear)
+                .addGap(34, 34, 34))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 11, Short.MAX_VALUE))
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnOkYear)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        tbStatistic1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"1", null, null},
+                {"2", null, null},
+                {"3", null, null},
+                {"4", null, null},
+                {"5", null, null},
+                {"6", null, null},
+                {"7", null, null},
+                {"8", null, null},
+                {"9", null, null},
+                {"10", null, null},
+                {"11", null, null},
+                {"12", null, null}
+            },
+            new String [] {
+                "Year", "Amount Sale", "Revenue"
+            }
+        ));
+        jScrollPane4.setViewportView(tbStatistic1);
+
+        btnChartYear.setText("Chart");
+        btnChartYear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChartYearActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnStaYearLayout = new javax.swing.GroupLayout(pnStaYear);
+        pnStaYear.setLayout(pnStaYearLayout);
+        pnStaYearLayout.setHorizontalGroup(
+            pnStaYearLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnStaYearLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(143, 143, 143))
+            .addGroup(pnStaYearLayout.createSequentialGroup()
+                .addGap(110, 110, 110)
+                .addGroup(pnStaYearLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnChartYear))
+                .addContainerGap(99, Short.MAX_VALUE))
+        );
+        pnStaYearLayout.setVerticalGroup(
+            pnStaYearLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnStaYearLayout.createSequentialGroup()
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnChartYear)
+                .addContainerGap(45, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout pnStatisticLayout = new javax.swing.GroupLayout(pnStatistic);
+        pnStatistic.setLayout(pnStatisticLayout);
+        pnStatisticLayout.setHorizontalGroup(
+            pnStatisticLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnStatisticLayout.createSequentialGroup()
+                .addGap(156, 156, 156)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(44, 44, 44)
+                .addComponent(cbType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnStatisticLayout.createSequentialGroup()
+                .addContainerGap(145, Short.MAX_VALUE)
+                .addComponent(pnStaMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(64, 64, 64))
+            .addGroup(pnStatisticLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnStatisticLayout.createSequentialGroup()
+                    .addContainerGap(128, Short.MAX_VALUE)
+                    .addComponent(pnStaYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(81, 81, 81)))
+        );
+        pnStatisticLayout.setVerticalGroup(
+            pnStatisticLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnStatisticLayout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addGroup(pnStatisticLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(38, 38, 38)
+                .addComponent(pnStaMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(55, Short.MAX_VALUE))
+            .addGroup(pnStatisticLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnStatisticLayout.createSequentialGroup()
+                    .addContainerGap(120, Short.MAX_VALUE)
+                    .addComponent(pnStaYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(55, 55, 55)))
+        );
+
+        pnlOrde.addTab("statistic", pnStatistic);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -456,6 +823,199 @@ public class ManageCar extends javax.swing.JFrame {
         new Login().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnLogoutActionPerformed
+
+    private void btnChartMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChartMonthActionPerformed
+        // TODO add your handling code here:
+        createChartPanelMonth();
+        
+    }//GEN-LAST:event_btnChartMonthActionPerformed
+
+    private void btnOkMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkMonthActionPerformed
+        // TODO add your handling code here:
+         int yearStas = Integer.parseInt(txtYear.getText().toString());
+            ArrayList<Vector> vectors = HandleManageCar.statisticMonth(yearStas);
+            
+            int coutColum = tbStatistic.getColumnCount();
+            DefaultTableModel dtm = (DefaultTableModel) tbStatistic.getModel();
+            dtm.setRowCount(0);
+            vectors.forEach(v->{
+                dtm.addRow(v);
+        });
+    }//GEN-LAST:event_btnOkMonthActionPerformed
+
+    private void cbTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbTypeActionPerformed
+        // TODO add your handling code here:
+        int cho = cbType.getSelectedIndex();
+        if(cho == 0){
+            pnStaMonth.setVisible(true);
+            pnStaYear.setVisible(false);
+        }
+        if(cho == 1){
+            pnStaMonth.setVisible(false);
+            pnStaYear.setVisible(true);
+        }
+    }//GEN-LAST:event_cbTypeActionPerformed
+
+    private void txtYearFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtYearFromActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtYearFromActionPerformed
+
+    private void txtYearFromKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtYearFromKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtYearFromKeyPressed
+
+    private void btnOkYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkYearActionPerformed
+        // TODO add your handling code here:
+        int yearFrom = Integer.parseInt(txtYearFrom.getText().toString());
+        int yearTo = Integer.parseInt(txtYearTo.getText().toString());
+            ArrayList<Vector> vectors = HandleManageCar.statisticYear(yearFrom, yearTo);
+            
+            int coutColum = yearTo - yearFrom + 1;
+            DefaultTableModel dtm = (DefaultTableModel) tbStatistic1.getModel();
+            dtm.setRowCount(0);
+            vectors.forEach(v->{
+                dtm.addRow(v);
+        });
+    }//GEN-LAST:event_btnOkYearActionPerformed
+
+    private void btnChartYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChartYearActionPerformed
+        // TODO add your handling code here:
+        createChartPanelYear();
+        
+    }//GEN-LAST:event_btnChartYearActionPerformed
+
+    private void txtYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtYearActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtYearActionPerformed
+
+    private void txtYearKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtYearKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtYearKeyPressed
+
+    private void txtYearToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtYearToActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtYearToActionPerformed
+
+    private void txtYearToKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtYearToKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtYearToKeyPressed
+
+    private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindActionPerformed
+        // TODO add your handling code here:
+        String nameCar = edtName.getText().toString();
+        updateTableCarBuying(nameCar);
+    }//GEN-LAST:event_btnFindActionPerformed
+    
+    private void updateTableCarBuying(String name){
+            ArrayList<Car> cars = HandleManageCar.findCar(name);
+            DefaultTableModel dtm = (DefaultTableModel) tblCar.getModel();
+            int c = dtm.getColumnCount();
+            dtm.setRowCount(0);
+            for(int i=0;i< cars.size();i++){
+                Vector v = new Vector();
+                v.add(cars.get(i).getId());
+                v.add(cars.get(i).getNameCar());
+                v.add(cars.get(i).getName_brand());
+                v.add(cars.get(i).getPrice());
+                v.add(cars.get(i).getCountry());
+                v.add(cars.get(i).getAmount());
+                dtm.addRow(v);
+            }
+            
+    }
+    
+    private void updateHistoryBuyingTable(){
+            ArrayList<Vector> rows = HandleCustomer.getAllHistoryBuyingCustomer();
+            DefaultTableModel dtm = (DefaultTableModel) tblHistoryBuyingCar.getModel();
+            dtm.setRowCount(0);
+            rows.forEach(it -> dtm.addRow(it));
+            
+    }
+    
+    private void createChartPanelMonth() {
+        String chartTitle = "Amount car per month";
+        String categoryAxisLabel = "Month of Year";
+        String valueAxisLabel = "Values";
+ 
+        CategoryDataset dataset = createDatasetMonth();
+ 
+        JFreeChart chart = ChartFactory.createLineChart(chartTitle,
+            categoryAxisLabel, valueAxisLabel, dataset);
+ 
+        CategoryPlot p = chart.getCategoryPlot();
+        p.setRangeGridlinePaint(Color.BLUE);
+        ChartFrame chartFrame = new ChartFrame("Amount car per month", chart);
+        chartFrame.setVisible(true);
+        chartFrame.setSize(450, 350);
+        chartFrame.setLocationRelativeTo(null);
+    }
+    private CategoryDataset createDatasetMonth() {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        String series1 = "Amount car";
+        
+        int yearStas = Integer.parseInt(txtYear.getText().toString());
+        ArrayList<Vector> listMonths = HandleManageCar.statisticMonth(yearStas);
+        
+        for(int i=0; i<listMonths.size(); i++){
+            int revenue = (int)listMonths.get(i).get(1);
+            String month = String.valueOf((int)listMonths.get(i).get(0));
+            
+            dataset.addValue(revenue, series1, month);
+        }
+        
+//        listMonths.forEach(item -> {
+//            double revenue = (double)((int)item.get(2)*1.0);
+//            String month = String.valueOf((int)item.get(0));
+//            dataset.addValue(revenue, series1, month);
+//        });
+        
+        
+        return dataset;
+    }
+    
+    private void createChartPanelYear() {
+        String chartTitle = "Amount car per year";
+        String categoryAxisLabel = "Years";
+        String valueAxisLabel = "Values";
+ 
+        CategoryDataset dataset = createDatasetYear();
+ 
+        JFreeChart chart = ChartFactory.createLineChart(chartTitle,
+            categoryAxisLabel, valueAxisLabel, dataset);
+ 
+        CategoryPlot p = chart.getCategoryPlot();
+        p.setRangeGridlinePaint(Color.BLUE);
+        ChartFrame chartFrame = new ChartFrame("Amount car per year", chart);
+        chartFrame.setVisible(true);
+        chartFrame.setSize(450, 350);
+        chartFrame.setLocationRelativeTo(null);
+    }
+    
+    private CategoryDataset createDatasetYear() {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        String series1 = "Amount car";
+        
+        int yearFrom = Integer.parseInt(txtYearFrom.getText().toString());
+        int yearTo = Integer.parseInt(txtYearTo.getText().toString());
+        ArrayList<Vector> listYears = HandleManageCar.statisticYear(yearFrom, yearTo);
+        
+        for(int i=0; i<listYears.size(); i++){
+            int revenue = (int)listYears.get(i).get(1);
+            String year = String.valueOf((int)listYears.get(i).get(0));
+            
+            dataset.addValue(revenue, series1, year);
+        }
+        
+//        listMonths.forEach(item -> {
+//            double revenue = (double)((int)item.get(2)*1.0);
+//            String month = String.valueOf((int)item.get(0));
+//            dataset.addValue(revenue, series1, month);
+//        });
+        
+        
+        return dataset;
+    }
+    
     void updateTableCar(){
         Connection connection = null;
         Statement statement = null;
@@ -464,7 +1024,7 @@ public class ManageCar extends javax.swing.JFrame {
         int c;
         try{
             Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/carshopping", "root", "hoanglinh777");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/carshopping", NAME_ROOT, PASSWORD_ROOT);
             String sql= "select * from car";
             statement = connection.createStatement();
             resultSet = statement.executeQuery(sql);
@@ -499,14 +1059,6 @@ public class ManageCar extends javax.swing.JFrame {
             e.getMessage();
             
         } 
-    }
-    public void updateHistoryBuyingTable(){
-        ArrayList<Vector> rows =HandleCustomer.getAllHistoryBuyingCustomer();
-        DefaultTableModel dtm = (DefaultTableModel) tblHistoryBuyingCar.getModel();
-        dtm.setRowCount(0);
-        rows.forEach(it ->
-                dtm.addRow(it)
-        );
     }
     /**
      * @param args the command line arguments
@@ -545,32 +1097,56 @@ public class ManageCar extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddCar;
+    private javax.swing.JButton btnChartMonth;
+    private javax.swing.JButton btnChartYear;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnFind;
     private javax.swing.JButton btnLogout;
+    private javax.swing.JButton btnOkMonth;
+    private javax.swing.JButton btnOkYear;
     private javax.swing.JButton btnReset;
+    private javax.swing.JComboBox<String> cbType;
     private javax.swing.JComboBox<String> cbbCountry;
     private javax.swing.JTextField edtBrand;
     private javax.swing.JTextField edtName;
     private javax.swing.JTextField edtPrice;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JPanel jplHistoryBuy;
+    private javax.swing.JPanel pnStaMonth;
+    private javax.swing.JPanel pnStaYear;
+    private javax.swing.JPanel pnStatistic;
     private javax.swing.JPanel pnlModify;
     private javax.swing.JTabbedPane pnlOrde;
     private javax.swing.JSpinner spnAmount;
+    private javax.swing.JTable tbStatistic;
+    private javax.swing.JTable tbStatistic1;
     private javax.swing.JTable tblCar;
     private javax.swing.JTable tblHistoryBuyingCar;
+    private javax.swing.JTextField txtYear;
+    private javax.swing.JTextField txtYearFrom;
+    private javax.swing.JTextField txtYearTo;
     // End of variables declaration//GEN-END:variables
 
     private void addEvents() {

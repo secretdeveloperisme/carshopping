@@ -13,6 +13,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Vector;
 import model.Car;
 import static process.HandleAccount.NAME_ROOT;
 import static process.HandleAccount.PASSWORD_ROOT;
@@ -149,7 +150,113 @@ public class HandleManageCar {
             return null;
         }
     }
+    
+    public static ArrayList<Vector> statisticMonth(int yearStas){
+        Connection connection;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        ArrayList<Vector> months = new ArrayList<Vector>();
+        //khoi tao
+        for(int i=1; i<=12; i++){
+            Vector vector = new Vector();
+            vector.add(i);
+            vector.add(0);
+            vector.add(0.0);
+            months.add(vector);
+        }
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/carshopping", NAME_ROOT, PASSWORD_ROOT);
+            String sql = "select month(o.buying_time) as month, sum(amount) as amount_sale, sum(total) as total " +
+                "from (" +
+                "select * " +
+                "from orders " +
+                "where year(orders.buying_time) = ?" +
+                ") as o" +
+                " group by month(o.buying_time)";
+            preparedStatement = (PreparedStatement) connection.prepareCall(sql);
+            preparedStatement.setInt(1,yearStas);
+            resultSet = preparedStatement.executeQuery();
+            int i =0;
+            while(resultSet.next()){
+                Vector v = new Vector();
+                int monthStas = resultSet.getInt("month");
+                v.add(monthStas);        
+                v.add(resultSet.getInt("amount_sale"));
+                v.add(resultSet.getInt("total"));
+                months.set(monthStas-1, v);
+                i++;
+            }
+            preparedStatement.close();
+            connection.close();
+            return months;
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+            return null;
+            
+        }
+        catch(ClassNotFoundException e){
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+    
+    public static ArrayList<Vector> statisticYear(int yearFrom, int yearTo){
+        Connection connection;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        ArrayList<Vector> years = new ArrayList<Vector>();
+        //khoi tao
+        for(int i=yearFrom; i<=yearTo; i++){
+            Vector vector = new Vector();
+            vector.add(i);
+            vector.add(0);
+            vector.add(0.0);
+            years.add(vector);
+        }
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/carshopping", NAME_ROOT, PASSWORD_ROOT);
+            String sql = "select year(o.buying_time) as year, sum(amount) as amount_sale, sum(total) as total " +
+                "from (" +
+                "select * " +
+                "from orders " +
+                "where year(orders.buying_time) >= ? " +
+                "and year(orders.buying_time) <= ? " +
+                ") as o" +
+                " group by year(o.buying_time)";
+            preparedStatement = (PreparedStatement) connection.prepareCall(sql);
+            preparedStatement.setInt(1,yearFrom);
+            preparedStatement.setInt(2,yearTo);
+            resultSet = preparedStatement.executeQuery();
+            int i =0;
+            while(resultSet.next()){
+                Vector v = new Vector();
+                int yearStas = resultSet.getInt("year");
+                v.add(yearStas);        
+                v.add(resultSet.getInt("amount_sale"));
+                v.add(resultSet.getInt("total"));
+                years.set(yearStas-yearFrom, v);
+                i++;
+            }
+            preparedStatement.close();
+            connection.close();
+            return years;
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+            return null;
+            
+        }
+        catch(ClassNotFoundException e){
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+    
     public static void main(String[] args) {
-        System.out.println(findCar("s"));
+       // System.out.println(findCar("s"));
+        //System.out.println(statisticYear(2020, 2021));
     }
 }
