@@ -902,7 +902,7 @@ public class ManageCar extends javax.swing.JFrame {
 
     private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindActionPerformed
         // TODO add your handling code here:
-        String nameCar = edtName.getText().toString();
+        String nameCar = JOptionPane.showInputDialog(this, "please input name car", "Find", JOptionPane.INFORMATION_MESSAGE);
         updateTableCarBuying(nameCar);
     }//GEN-LAST:event_btnFindActionPerformed
     
@@ -915,10 +915,10 @@ public class ManageCar extends javax.swing.JFrame {
                 Vector v = new Vector();
                 v.add(cars.get(i).getId());
                 v.add(cars.get(i).getNameCar());
-                v.add(cars.get(i).getName_brand());
                 v.add(cars.get(i).getPrice());
-                v.add(cars.get(i).getCountry());
                 v.add(cars.get(i).getAmount());
+                v.add(cars.get(i).getName_brand());               
+                v.add(cars.get(i).getCountry());
                 dtm.addRow(v);
             }
             
