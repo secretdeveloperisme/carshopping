@@ -22,7 +22,7 @@ import model.Person;
  */
 public class HandleAccount {
     public static String NAME_ROOT = "root";
-    public static String PASSWORD_ROOT="hoanglinh777";
+    public static String PASSWORD_ROOT="150115";
     public static boolean Login(String userName,String passWord ){
         Connection connection = null;
         Statement statement = null;
