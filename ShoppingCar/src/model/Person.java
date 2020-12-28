@@ -97,7 +97,7 @@ public class Person {
 
     @Override
     public String toString() {
-        return "Person{" +"id= "+id+ " firstName=" + firstName + ", lastName=" + lastName + ", gender=" + gender + ", dateOfBirth=" + dateOfBirth + ", phoneNumber=" + phoneNumber + ", address=" + address + '}';
+        return "id= "+id+ "\nfirstName=" + firstName + "\nlastName=" + lastName + "\ngender=" + gender + "\ndateOfBirth=" + dateOfBirth + "\nphoneNumber=" + phoneNumber + "\naddress=" + address ;
     }
     
     
