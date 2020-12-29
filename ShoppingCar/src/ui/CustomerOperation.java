@@ -341,7 +341,7 @@ public class CustomerOperation extends javax.swing.JFrame {
             }
         }
         if(command == 3)
-            JOptionPane.showMessageDialog(this, p.toString(),"information: "+this.username,JOptionPane.PLAIN_MESSAGE);
+            new Information(p, money).setVisible(true);
         if(command==4){
             this.dispose();
             new Login().setVisible(true);
@@ -371,9 +371,17 @@ public class CustomerOperation extends javax.swing.JFrame {
         car.setPrice((int) tblCarBuying.getValueAt(row,3));
         car.setCountry((String) tblCarBuying.getValueAt(row, 4));
         car.setAmount((int) tblCarBuying.getValueAt(row, 5));
-        int totalAmount = Integer.parseInt(JOptionPane.showInputDialog("input amount"));
+        int totalAmount;
+        try {
+             totalAmount = Integer.parseInt(JOptionPane.showInputDialog("input amount"));
+        } 
+        catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Please input amount", "Amount = 0", JOptionPane.ERROR_MESSAGE);
+            totalAmount = 0;
+        }
+        
         HandleDate hd = new HandleDate();
-        if(HandleCustomer.buyCar(car, this.p,totalAmount , hd.getFullDateMySQL())){
+        if((totalAmount!=0)&&HandleCustomer.buyCar(car, this.p,totalAmount , hd.getFullDateMySQL())){
             JOptionPane.showMessageDialog(this, "buy success");
             loadUser();
             initCustomiseComponents();
