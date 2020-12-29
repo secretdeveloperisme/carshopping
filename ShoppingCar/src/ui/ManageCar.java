@@ -789,11 +789,11 @@ public class ManageCar extends javax.swing.JFrame {
         int id = (int) tblCar.getValueAt(n,0);
         boolean valid = HandleManageCar.deleteCar(id);
         if (valid){
-            JOptionPane.showMessageDialog(this, "ban da xoa thanh cong "+id);
+            JOptionPane.showMessageDialog(this, "delete successfully"+id);
             updateTableCar();
         }
         else {
-            JOptionPane.showMessageDialog(this, "ban da xoa that bai", "error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "delete failed", "error", JOptionPane.ERROR_MESSAGE);
         }
 
     }//GEN-LAST:event_btnDeleteActionPerformed
